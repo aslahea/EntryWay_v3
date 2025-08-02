@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+<div class="welcome-page">
+    <div class="welcome-left">
+        <!-- Placeholder SVG illustration, replace with your own if needed -->
+        <svg width="100%" height="100%" viewBox="0 0 400 400" fill="none">
+            <ellipse cx="200" cy="200" rx="180" ry="180" fill="#e1d7b7"/>
+            <ellipse cx="120" cy="220" rx="80" ry="120" fill="#e85c0d" opacity="0.7"/>
+            <ellipse cx="280" cy="180" rx="60" ry="90" fill="#7c3aed" opacity="0.7"/>
+            <ellipse cx="200" cy="120" rx="50" ry="70" fill="#38bdf8" opacity="0.7"/>
+        </svg>
+    </div>
+    <div class="welcome-right">
+        <nav class="welcome-nav">
+            <a href="#">Home</a>
+            <a href="#" class="active">Products</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </nav>
+        <div class="welcome-content">
+            <h1>WELCOME</h1>
+            <h2>Lorem Ipsum</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ultrices velit ut velit vestibulum tincidunt. Suspendisse nec tincidunt diam. Praesent euismod, elit eget tempus eleifend.</p>
+            <a href="#" class="explore-btn">Explore Now</a>
+        </div>
+        <div class="welcome-social">
+            <a href="#"><i class="bi bi-facebook"></i></a>
+            <a href="#"><i class="bi bi-twitter"></i></a>
+            <a href="#"><i class="bi bi-instagram"></i></a>
+            <a href="#"><i class="bi bi-youtube"></i></a>
+        </div>
+    </div>
+</div>
+{% endblock %}

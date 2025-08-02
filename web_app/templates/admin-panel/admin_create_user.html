@@ -1,0 +1,120 @@
+{% extends 'admin-panel/admin_base.html' %}
+{% block title %}Add New User{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-primary text-white rounded-top-4 py-3 px-4">
+            <h4 class="mb-0">
+                <i class="bi bi-person-plus-fill me-2"></i>Add New User
+            </h4>
+        </div>
+
+        <div class="card-body px-4 py-4">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+
+            <form method="POST" id="registerForm" novalidate>
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="username" class="form-label">Username *</label>
+                        <input type="text" name="username" id="username" class="form-control" required>
+                        <div class="error-message text-danger small mt-1"></div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="email" class="form-label">Email *</label>
+                        <input type="email" name="email" id="email" class="form-control" required>
+                        <div class="error-message text-danger small mt-1"></div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="password1" class="form-label">Password *</label>
+                        <input type="password" name="password" id="password1" class="form-control" required>
+                        <div class="error-message text-danger small mt-1"></div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="password2" class="form-label">Confirm Password *</label>
+                        <input type="password" name="confirm_password" id="password2" class="form-control" required>
+                        <div class="error-message text-danger small mt-1"></div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="dob" class="form-label">Date of Birth</label>
+                        <input type="date" name="dob" id="dob" class="form-control">
+                        <div class="error-message text-danger small mt-1"></div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="gender" class="form-label">Gender</label>
+                        <select name="gender" id="gender" class="form-select">
+                            <option value="">Select</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div class="error-message text-danger small mt-1"></div>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label class="form-label d-block">Marital Status</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="marital_status" id="single" value="Single" required>
+                            <label class="form-check-label" for="single">Single</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="marital_status" id="married" value="Married">
+                            <label class="form-check-label" for="married">Married</label>
+                        </div>
+                        <div class="error-message text-danger small mt-1"></div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="is_active" id="is_active" value="1" checked>
+                            <label class="form-check-label" for="is_active">Is Active</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="is_staff" id="is_staff" value="1">
+                            <label class="form-check-label" for="is_staff">Is Staff</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="is_superuser" id="is_superuser" value="1">
+                            <label class="form-check-label" for="is_superuser">Is Superuser</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <button type="submit" id="adminSubmitBtn" class="btn btn-success px-4">
+                        <i class="bi bi-check-circle me-1"></i> Create User
+                    </button>
+                    <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left-circle me-1"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/validation.js' %}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        attachAdminUserFormValidation("registerForm", true);
+    });
+</script>
+{% endblock %}

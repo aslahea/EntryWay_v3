@@ -1,0 +1,185 @@
+{% extends 'admin-panel/admin_base.html' %}
+{% load static %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">User Management</h2>
+        <a href="{% url 'admin_create_user' %}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Add New User
+        </a>
+    </div>
+
+    <!-- Filters Card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <strong>Filter Users</strong>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-2">
+                    <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ filters.search }}">
+                </div>
+                <div class="col-md-2">
+                    <select name="gender" class="form-select">
+                        <option value="">Gender</option>
+                        <option value="Male" {% if filters.gender == 'Male' %}selected{% endif %}>Male</option>
+                        <option value="Female" {% if filters.gender == 'Female' %}selected{% endif %}>Female</option>
+                        <option value="Other" {% if filters.gender == 'Other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="marital_status" class="form-select">
+                        <option value="">Marital Status</option>
+                        <option value="Single" {% if filters.marital_status == 'Single' %}selected{% endif %}>Single</option>
+                        <option value="Married" {% if filters.marital_status == 'Married' %}selected{% endif %}>Married</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="is_active" class="form-select">
+                        <option value="">Active</option>
+                        <option value="Yes" {% if filters.is_active == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No" {% if filters.is_active == 'No' %}selected{% endif %}>No</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="is_staff" class="form-select">
+                        <option value="">Staff</option>
+                        <option value="Yes" {% if filters.is_staff == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No" {% if filters.is_staff == 'No' %}selected{% endif %}>No</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="is_superuser" class="form-select">
+                        <option value="">Superuser</option>
+                        <option value="Yes" {% if filters.is_superuser == 'Yes' %}selected{% endif %}>Yes</option>
+                        <option value="No" {% if filters.is_superuser == 'No' %}selected{% endif %}>No</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="ordering" class="form-select">
+                        <option value="-date_joined" {% if filters.ordering == '-date_joined' %}selected{% endif %}>Newest</option>
+                        <option value="date_joined" {% if filters.ordering == 'date_joined' %}selected{% endif %}>Oldest</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-outline-primary w-100">Apply</button>
+                </div>
+                <div class="col-md-2">
+                    <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary w-100">Clear</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Table Card -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <strong>User List</strong>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>DOB</th>
+                            <th>Gender</th>
+                            <th>Marital</th>
+                            <th>Active</th>
+                            <th>Staff</th>
+                            <th>Superuser</th>
+                            <th>Deleted</th>
+                            <th>Date Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in page_obj %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email|default:"-" }}</td>
+                            <td>{{ user.dob|default:"-" }}</td>
+                            <td>{{ user.gender|default:"-" }}</td>
+                            <td>{{ user.marital_status|default:"-" }}</td>
+                            <td>
+                                <span class="badge bg-{{ user.is_active|yesno:'success,danger' }}">{{ user.is_active|yesno:"Yes,No" }}</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ user.is_staff|yesno:'info,secondary' }}">{{ user.is_staff|yesno:"Yes,No" }}</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ user.is_superuser|yesno:'warning,secondary' }}">{{ user.is_superuser|yesno:"Yes,No" }}</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-{{ user.is_deleted|yesno:'danger,success' }}">{{ user.is_deleted|yesno:"Yes,No" }}</span>
+                            </td>
+                            <td>{{ user.date_joined|date:"M d, Y H:i" }}</td>
+                            <td class="text-nowrap">
+                                <a href="{% url 'admin_edit_user' user.id %}" 
+                                   class="btn btn-sm btn-outline-primary d-inline-flex align-items-center me-1"
+                                   data-bs-toggle="tooltip" 
+                                   title="Edit User">
+                                    <i class="bi bi-pencil-fill me-1 fs-6"></i> Edit
+                                </a>
+                            
+                                <a href="{% url 'admin_soft_delete_user' user.id %}" 
+                                   class="btn btn-sm btn-outline-danger d-inline-flex align-items-center"
+                                   onclick="return confirm('Are you sure you want to delete this user?');"
+                                   data-bs-toggle="tooltip" 
+                                   title="Delete User">
+                                    <i class="bi bi-x-circle-fill me-1 fs-6"></i> Delete
+                                </a>
+                            </td>
+                            
+                            
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="11" class="text-center">No users found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+            </li>
+            {% endif %}
+
+            {% for i in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == i %}active{% endif %}">
+                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+            </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<!-- JS for tooltips -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    });
+</script>
+{% endblock %}
